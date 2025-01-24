@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
+use App\Http\Controllers\ProductRatingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
@@ -32,15 +33,12 @@ Auth::routes();
 
 
 // <!--==========================================  (HOME)  ========================================================================================================================-->
-
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/', [HomeController::class, 'index']);
 
 
 // <!--==========================================  (Dashboard)  ============================================================================================================================-->
-
 Route::get('/dashboard', [ChartController::class, 'index'])->middleware(['auth' , 'manager'])->name('dashboard');
 
 
@@ -52,15 +50,17 @@ Route::resource('users', UserController::class)->middleware(['auth' , 'manager']
 
 
 // <!--==========================================  (profile)  ===============================================================================================================-->
-Route::get('/profile_dashboard', [UserController::class, 'show_profile_dash'])->name('profile_dash.show')->middleware(['auth' , 'role']);
-Route::put('/profile_dash_edit', [UserController::class, 'update_profile_dash'])->name('profile_dash.update')->middleware(['auth' , 'role']);
-
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [UserController::class, 'update_profile'])->name('profile.update');
     Route::get('/order-details/{id}', [OrderController::class, 'getOrderDetails'])->name('order.details');
 });
+
+
+Route::get('/profile_dashboard', [UserController::class, 'show_profile_dash'])->name('profile_dash.show')->middleware(['auth' , 'role']);
+Route::put('/profile_dash_edit', [UserController::class, 'update_profile_dash'])->name('profile_dash.update')->middleware(['auth' , 'role']);
+
+
 
 
 
@@ -95,7 +95,15 @@ Route::resource('subCategories', SubCategoryController::class)->middleware(['aut
 // <!--==========================================  (Products)  ===================================================================================================================-->
 Route::resource('products', ProductController::class)->middleware(['auth' , 'role']);
 Route::delete('/product_images/{product_image}', [productImageController::class, 'destroy'])->name('product_images.destroy')->middleware(['auth' , 'role']);
+Route::post('/product/toggle-status/{id}/{type}', [ProductController::class, 'toggleStatus'])->name('product.toggle-status'); //for the bestseller and the new choosen products
 Route::get('/product_details/{id}',[ProductController::class, 'show_user_side'])->name("product_details");
+
+
+
+// <!--==========================================  (Product ratings)  ===================================================================================================================-->
+Route::post('/productRating', [ProductRatingController::class, 'store'])->name('productRating.store');
+
+
 
 
 // <!--==========================================  (Store)  ===================================================================================================================-->
@@ -105,12 +113,12 @@ Route::get('/subcategory/{id}/filter', [ProductController::class, 'productsBySub
 Route::get('/category/{id}/filter', [ProductController::class, 'productsByCategory'])->name('products.filterCategory');
 
 
+
 // <!--==========================================  (Cart)  ===================================================================================================================-->
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/delete/{product_id}', [CartController::class, 'deleteCartItem'])->name('cart.delete');
-
 Route::post('cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
 

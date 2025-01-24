@@ -5,7 +5,12 @@
 <div class="card">
 <div class="card-body" style="border: 1px solid #e7dee9;">
         
-        <p align="center" style="margin-top: 50px;"><strong>{{ $product->name }}</strong> </p>
+        <p align="center" style="margin-top: 50px;"><strong>{{ $product->name }} </strong> </p>
+        <p align="center" style="color:#f9ba48;">
+            @for ($i = 1; $i <= 5; $i++)
+                <i class="zmdi {{ $i <= $averageRating ? 'zmdi-star' : 'zmdi-star-outline' }}"></i>
+            @endfor
+        </p>
         <p><strong>Small Description:</strong> {{ $product->small_description }}</p>
         <p><strong>Description:</strong> {{ $product->description }}</p>
         <p><strong>Old Price:</strong> {{ $product->old_price }}</p>

@@ -21,6 +21,26 @@
 
   <!-- Template Main JS File -->
   <script src="{{asset("assets/js/main.js")}}"></script>
+ 
+ <!-- Loading spinner -->
+ <script>
+    window.addEventListener('load', function () {
+        // Hide the spinner when the page is fully loaded
+        document.getElementById('pageLoader').style.display = 'none';
+    });
+
+    // Show the spinner when the page starts loading
+    window.addEventListener('beforeunload', function () {
+        document.getElementById('pageLoader').style.display = 'block';
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // This event is fired when the DOM is fully loaded, but images may still be loading.
+        // Ensure the spinner is hidden when the DOM content is loaded.
+        document.getElementById('pageLoader').style.display = 'none';
+    });
+</script>
+
 
 </body>
 

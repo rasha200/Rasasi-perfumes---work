@@ -30,6 +30,9 @@
   <!-- Template Main CSS File -->
   <link href="{{asset("assets/css/style.css")}}" rel="stylesheet">
 
+
+  <link rel="stylesheet" href="{{asset("https://cdn.jsdelivr.net/npm/material-design-iconic-font@2.2.0/dist/css/material-design-iconic-font.min.css")}}">
+
   <!-- =======================================================
   * Template Name: NiceAdmin
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/

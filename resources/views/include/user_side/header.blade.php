@@ -65,7 +65,7 @@
                     <div class="stelina-language">
                         <a href="#" class="active language-toggle" data-stelina="stelina-dropdown">
 									<span>
-										{{ Auth::user()->Fname }}  {{ Auth::user()->Lname }}
+										Hi,{{ Auth::user()->Fname }}  {{ Auth::user()->Lname }}
 									</span>
                         </a>
                         

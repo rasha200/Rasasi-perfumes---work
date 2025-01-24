@@ -39,7 +39,7 @@ class LoginController extends Controller
             return route('order.create');
         }
 
-
+       
 
         if (Auth::user()->role == 'manager') {
             return route('dashboard');

@@ -33,21 +33,41 @@
                            
                         </div>
                         <div class="product-info">
-                            <h5 class="product-name product_title">
+                            <h5 class="product-name product_title" >
                                 <a href="{{ route('product_details', $product->id) }}" tabindex="0">{{ $product->name }}</a>
                             </h5>
                             <div class="group-info">
                                 <div class="stars-rating">
-                                    <div class="star-rating">
-                                        <span class="star-3"></span>
+                                    {{-- <div class="star-rating">
+                                        <span class="star-1"></span>
                                     </div>
                                     <div class="count-star">
                                         (3)
-                                    </div>
+                                    </div> --}}
                                 </div>
+                                @if($product->discount)
                                 <div class="price">
-                                    <span>{{ $product->price }} JOD</span>
+                                    <del>
+                                        {{ $product->price }} JOD
+                                    </del>
+                                    <ins>
+                                        {{ number_format($product->price * (1 - $product->discount / 100), 2) }} JOD
+                                    </ins>
                                 </div>
+                                @else
+                                <div class="price">
+                                    @if($product->old_price)
+                                    <del>
+                                        {{ $product->old_price }} JOD
+                                    </del>
+                                    @else
+                                     <span></span>
+                                    @endif
+                                    <ins>
+                                        {{ $product->price }} JOD
+                                    </ins>
+                                </div>
+                                @endif
                             </div>
                             <div class="group-buttons">
                                 <div class="quantity">
@@ -58,7 +78,7 @@
                                         <a href="#" class="btn-number qtyplus quantity-plus">+</a>
                                     </div>
                                 </div>
-                                <a href="{{ route('product_details', $product->id) }}" class="add_to_cart_button button" tabindex="0">Shop now</a>
+                                <a href="{{ route('product_details', $product->id) }}" class="add_to_cart_button button" tabindex="0" style="margin-top: 10px;">Shop now</a>
                             </div>
                         </div>
                     </div>

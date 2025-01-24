@@ -81,14 +81,16 @@
                             <h1 class="product-title">
                                 {{ $product->name }} 
                             </h1>
+                            
                             <div class="stars-rating">
-                                <div class="star-rating">
-                                    <span class="star-5"></span>
-                                </div>
-                                <div class="count-star">
-                                    (7)
-                                </div>
+                                <span style="color:#f9ba48;">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="zmdi {{ $i <= $averageRating ? 'zmdi-star' : 'zmdi-star-outline' }}"></i>
+                                    @endfor
+                                </span>
                             </div>
+                            
+                            
                             <div class="availability">
                                 availability:
                                 @if ($product->quantity > 0)
@@ -196,6 +198,11 @@
                             <li class="active">
                                 <a data-toggle="tab" aria-expanded="true" href="#product-descriptions">Descriptions </a>
                             </li>
+
+                            <li class="">
+                                <a data-toggle="tab" aria-expanded="true" href="#reviews">Reviews</a>
+                            </li>
+
                         </ul>
                         <div class="tab-container">
                             <div id="product-descriptions" class="tab-panel active">
@@ -204,7 +211,115 @@
                                 </p>
                                
                             </div>
-                           
+
+                            <div id="reviews" class="tab-panel">
+                                <div class="reviews-tab">
+                                 
+                                    <div class="review_form_wrapper">
+                                        <div class="review_form">
+                                            <div class="comment-respond">
+                                              
+                                                <form class="comment-form-review" method="POST" action="{{ route('productRating.store') }}">
+                                                    @csrf
+                                                    <div class="comment-form-rating">
+                                                        <label>Your rating</label>
+                                                        <p class="stars">
+                                                            <span>
+                                                                <i class="item-rating zmdi zmdi-star-outline" onmouseover="hoverRating(1)" onmouseout="clearHover()" onclick="setRating(1)"></i>
+                                                                <i class="item-rating zmdi zmdi-star-outline" onmouseover="hoverRating(2)" onmouseout="clearHover()" onclick="setRating(2)"></i>
+                                                                <i class="item-rating zmdi zmdi-star-outline" onmouseover="hoverRating(3)" onmouseout="clearHover()" onclick="setRating(3)"></i>
+                                                                <i class="item-rating zmdi zmdi-star-outline" onmouseover="hoverRating(4)" onmouseout="clearHover()" onclick="setRating(4)"></i>
+                                                                <i class="item-rating zmdi zmdi-star-outline" onmouseover="hoverRating(5)" onmouseout="clearHover()" onclick="setRating(5)"></i>
+                                                                <input type="hidden" name="rating" id="rating" value="" required>
+                                                            </span>
+
+                                                        </p>
+                                                    </div>
+                                                    <p class="comment-form-comment">
+                                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    </p>
+                                                    <p class="form-submit">
+                                                        <input name="submit" type="submit" id="submit" class="submit" value="Submit">
+                                                    </p>
+                                                </form>
+                                                
+                                                <script>
+                                                    // Function to update the stars based on the rating
+                                                    function setRating(rating) {
+                                                        // Set the hidden input field's value
+                                                        document.getElementById('rating').value = rating;
+                                            
+                                                        // Update star visuals based on selected rating
+                                                        const stars = document.querySelectorAll('.item-rating');
+                                                        stars.forEach((star, index) => {
+                                                            if (index < rating) {
+                                                                star.classList.add('zmdi-star'); // Filled star class
+                                                                star.classList.remove('zmdi-star-outline'); // Outline star class
+                                                            } else {
+                                                                star.classList.add('zmdi-star-outline');
+                                                                star.classList.remove('zmdi-star');
+                                                            }
+                                                        });
+                                                    }
+                                            
+                                                    // Function to add hover effect
+                                                    function hoverRating(rating) {
+                                                        const stars = document.querySelectorAll('.item-rating');
+                                                        stars.forEach((star, index) => {
+                                                            if (index < rating) {
+                                                                star.classList.add('hovered'); // Highlight hovered stars
+                                                            } else {
+                                                                star.classList.remove('hovered'); // Remove highlight for stars not hovered over
+                                                            }
+                                                        });
+                                                    }
+                                            
+                                                    // Function to clear hover effect
+                                                    function clearHover() {
+                                                        const stars = document.querySelectorAll('.item-rating');
+                                                        stars.forEach((star) => {
+                                                            star.classList.remove('hovered'); // Remove hover effect
+                                                        });
+                                                    }
+                                            
+                                                 
+                                                </script>
+                                                
+                                                <style>
+                                                    .item-rating {
+                                                        font-size: 24px; /* Adjust size */
+                                                        color: gray; /* Default star color */
+                                                        cursor: pointer; /* Pointer on hover */
+                                                        margin-right: 5px; /* Spacing */
+                                                    }
+                                                    .item-rating.zmdi-star {
+                                                        color: gold; /* Highlight selected stars */
+                                                    }
+
+                                                    .item-rating.hovered {
+                                                        color: gold; /* Hovered stars color */
+                                                    }
+                                                </style>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <style>
+                                #reviews {
+                                    margin: 0 auto; /* Center horizontally */
+                                    text-align: center; /* Center text inside the div */
+                                    width: fit-content; /* Adjust width to content size */
+                                }
+
+                                .stars a:hover{
+                                    color: #ffb933 !important;
+                                }
+                                
+                            </style> 
+
                         </div>
                     </div>
                     <div style="clear: left;"></div>
@@ -217,17 +332,17 @@
 
         <!------------------------- Related Products ------------------------------>
 
-                            @foreach($relatedProducts as $product)
+                            @foreach($relatedProducts as $relatedProduct)
                             <div class="product-item style-1">
                                 <div class="product-inner equal-element">
                                     
                                     <div class="product-thumb">
-                                        @if($product->discount)
+                                        @if($relatedProduct->discount)
                                         <div class="product-top">
                                             <div class="flash">
                                                     <span class="onnew">
                                                         <span class="text">
-                                                            {{ $product->discount }}%
+                                                            {{ $relatedProduct->discount }}%
                                                         </span>
                                                     </span>
                                             </div>
@@ -235,9 +350,9 @@
                                         </div>
                                         @endif
                                         <div class="thumb-inner">
-                                            <a href="{{ route('product_details', $product->id) }}">
-                                                @if($product->product_images->isNotEmpty())
-                                                <img src="{{ asset($product->product_images[0]->image) }}" alt="img" style="height: 368px; width:368px;">
+                                            <a href="{{ route('product_details', $relatedProduct->id) }}">
+                                                @if($relatedProduct->product_images->isNotEmpty())
+                                                <img src="{{ asset($relatedProduct->product_images[0]->image) }}" alt="img" style="height: 368px; width:368px;">
                                                 @else
                                             <span>No image available</span>
                                         @endif
@@ -247,37 +362,38 @@
                                     </div>
                                     <div class="product-info">
                                         <h5 class="product-name product_title">
-                                            <a href="{{ route('product_details', $product->id) }}">{{ $product->name }} </a>
+                                            <a href="{{ route('product_details', $relatedProduct->id) }}">{{ $relatedProduct->name }} </a>
                                         </h5>
+
+                                        
                                         <div class="group-info">
                                             <div class="stars-rating">
-                                                <div class="star-rating">
-                                                    <span class="star-3"></span>
-                                                </div>
-                                                <div class="count-star">
-                                                    (3)
-                                                </div>
+                                                <span style="color:#f9ba48;"> 
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                    <i class="zmdi {{ $i <= $relatedProduct->average_rating ? 'zmdi-star' : 'zmdi-star-outline' }}" style="display: inline-block; vertical-align: middle;"></i>
+                                                   @endfor
+                                                </span>
                                             </div>
-                                            @if($product->discount)
+                                            @if($relatedProduct->discount)
                                                 <div class="price">
                                                     <del>
-                                                        {{ $product->price }} JOD
+                                                        {{ $relatedProduct->price }} JOD
                                                     </del>
                                                     <ins>
-                                                        {{ number_format($product->price * (1 - $product->discount / 100), 2) }} JOD
+                                                        {{ number_format($relatedProduct->price * (1 - $relatedProduct->discount / 100), 2) }} JOD
                                                     </ins>
                                                 </div>
                                                 @else
                                                 <div class="price">
-                                                    @if($product->old_price)
+                                                    @if($relatedProduct->old_price)
                                                     <del>
-                                                        {{ $product->old_price }} JOD
+                                                        {{ $relatedProduct->old_price }} JOD
                                                     </del>
                                                     @else
                                                      <span></span>
                                                     @endif
                                                     <ins>
-                                                        {{ $product->price }} JOD
+                                                        {{ $relatedProduct->price }} JOD
                                                     </ins>
                                                 </div>
                                                 @endif
@@ -349,21 +465,25 @@
  </div>
 
  <script>
-     $(document).ready(function() {
-         // Show the modal
-         $('#customModal').fadeIn();
+    $(document).ready(function() {
+        // Show the modal
+        $('#customModal').fadeIn();
 
-         // Set the modal title and message
-         var isSuccess = '{{ Session::get("success") }}' ? true : false;
-         $('#modalTitle').text(isSuccess ? 'Success' : 'Error');
-         $('#modalMessage').text('{{ Session::get("success") ?? Session::get("error") }}');
-     });
+        // Set the modal title and message
+        var isSuccess = '{{ Session::get("success") }}' ? true : false;
+        $('#modalTitle').text(isSuccess ? 'Success' : 'Error');
+        $('#modalMessage').text('{{ Session::get("success") ?? Session::get("error") }}');
 
-     // Close the modal when the user clicks "OK"
-     $('.close-modal-btn').click(function() {
-         $('#customModal').fadeOut();
-     });
- </script>
+        // Close the modal and refresh the page when the user clicks "OK"
+        $('.close-modal-btn').click(function() {
+            $('#customModal').fadeOut();
+
+            // Refresh the page
+            location.reload(); // This reloads the page and clears the session
+        });
+    });
+</script>
+
 @endif
 
 

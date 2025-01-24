@@ -286,5 +286,5 @@
  </script>
 @endif
 
-<pre> {{ print_r($cart, true) }} </pre>
+{{-- <pre> {{ print_r($cart, true) }} </pre> --}}
 @endsection

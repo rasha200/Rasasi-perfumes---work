@@ -20,6 +20,12 @@ class ProductController extends Controller
     {
 
        $products = Product::with('product_images')->get();
+       // Fetch the average rating for each product
+       foreach ($products as $product) {
+        // Calculate the average rating
+         $averageRating = $product->product_ratings()->avg('rating') ?? 0; 
+         $product->average_rating = $averageRating; 
+     }
       
        return view('dashboard.products.index' , ['products'=> $products]);
     }
@@ -48,6 +54,8 @@ class ProductController extends Controller
             'price' => 'required',
             'discount' => 'nullable|numeric|min:0|max:100',
             'quantity' => 'required|integer',
+            'is_bestseller' => 'required|in:true,false',
+            'is_new' => 'required|in:true,false',
             'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,WEBP,AVIF|max:2048',
             'subCategory_id' => 'required|exists:sub_categories,id',
         ]);
@@ -60,6 +68,8 @@ class ProductController extends Controller
             'old_price'=>$request->input('old_price'),
             'discount' => $request->input('discount'), 
             'quantity'=>$request->input('quantity'),
+            'is_bestseller' => 'false',
+            'is_new' => 'false',
             'subCategory_id'=>$request->input('subCategory_id'),
         ]);
 
@@ -94,7 +104,13 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $productImages = $product->product_images; 
-        return view('dashboard.products.show' , ['product'=> $product,'productImages'=>$productImages]);
+        $averageRating = $product->product_ratings()->avg('rating')?? 0;
+
+        return view('dashboard.products.show' , [
+            'product'=> $product,
+            'productImages'=>$productImages,
+            'averageRating'=>$averageRating,
+        ]);
     }
 
 
@@ -104,17 +120,26 @@ class ProductController extends Controller
     {
         
         $product = Product::findOrFail($id); 
+        $averageRating = $product->product_ratings()->avg('rating')?? 0;
+        // dd($averageRating); 
         $productImages = $product->product_images; 
         $relatedProducts = Product::where('subCategory_id', $product->subCategory_id)
         ->where('id', '!=', $product->id)
         ->inRandomOrder() 
         ->take(12) 
         ->get();
+        // Fetch the average rating for each product
+        foreach ($relatedProducts as $relatedProduct) {
+            // Calculate the average rating
+             $average_Rating = $relatedProduct->product_ratings()->avg('rating') ?? 0; 
+             $relatedProduct->average_rating = $average_Rating; 
+         }
 
         return view('product_details' , [
             'product'=> $product,
             'productImages'=>$productImages,
             'relatedProducts' => $relatedProducts,
+            'averageRating'=>$averageRating,
         ]);
     }
 
@@ -189,6 +214,31 @@ class ProductController extends Controller
     }
 
 
+
+
+// <!--==============  (for the bestseller and the new choosen products)  =============================-->
+    public function toggleStatus($id, $type)
+    {
+        
+        $product = Product::findOrFail($id);
+    
+        
+        if ($type === 'bestseller') {
+            $product->is_bestseller = $product->is_bestseller === 'true' ? 'false' : 'true';
+        } elseif ($type === 'new') {
+            $product->is_new = $product->is_new === 'true' ? 'false' : 'true';
+        } else {
+            return redirect()->back()->with('error', 'Invalid toggle type.');
+        }
+    
+        $product->save();
+    
+        return redirect()->back()->with('success', 'Product status updated successfully.');
+    }
+    
+
+
+
     public function productsByCategory($id, Request $request)
     {
         
@@ -221,6 +271,13 @@ class ProductController extends Controller
     
         
         $products = $query->orderBy('name', 'asc')->paginate(16);
+
+        // Fetch the average rating for each product
+        foreach ($products as $product) {
+            // Calculate the average rating
+             $averageRating = $product->product_ratings()->avg('rating') ?? 0; 
+             $product->average_rating = $averageRating; 
+         }
     
         return view('store', compact('products', 'category', 'maxPrice'));
     }
@@ -256,6 +313,12 @@ class ProductController extends Controller
     
        
         $products = $query->orderBy('name', 'asc')->paginate(16);
+         // Fetch the average rating for each product
+         foreach ($products as $product) {
+            // Calculate the average rating
+             $averageRating = $product->product_ratings()->avg('rating') ?? 0; 
+             $product->average_rating = $averageRating; 
+         }
     
         return view('store', compact('products', 'subCategory', 'maxPrice'));
     }

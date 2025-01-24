@@ -54,10 +54,12 @@
                           <th>Id</th>
                           <th>Name</th>
                           <th>Image</th>
+                          <th>Brand</th>
                           <th>Price</th>
                           <th>Discount</th>
                           <th>Quantity</th>
-                          <th>Brand</th>
+                          <th>Is bestseller</th>
+                          <th>Is new</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -74,6 +76,12 @@
                             title="View">
                             {{$product->name}}
                             </a>
+                            <br>
+                            <span style="color:#f9ba48;"> 
+                              @for ($i = 1; $i <= 5; $i++)
+                              <i class="zmdi {{ $i <= $product->average_rating ? 'zmdi-star' : 'zmdi-star-outline' }}" style="display: inline-block; vertical-align: middle;"></i>
+                              @endfor
+                              </span>
                           </td>
 
 
@@ -85,6 +93,7 @@
                             <span>No image available</span>
                         @endif
                         </td> 
+                        <td>{{$product->subCategory->category->name}} - {{$product->subCategory->name}}</td>
                           <td>{{$product->price}}</td>
                           
                           @if($product->discount)
@@ -94,14 +103,36 @@
                           @endif
 
                           <td>{{$product->quantity}}</td>
-                          <td>{{$product->subCategory->category->name}} - {{$product->subCategory->name}}</td>
+                         
+
+                          <td>
+                            <form action="{{ route('product.toggle-status', ['id' => $product->id, 'type' => 'bestseller']) }}" method="POST">
+                              @csrf
+                              <div class="form-check form-switch">
+                                  <input class="form-check-input" type="checkbox" name="is_bestseller" id="bestseller-{{ $product->id }}" 
+                                      {{ $product->is_bestseller === 'true' ? 'checked' : '' }}
+                                      onchange="this.form.submit()">
+                                  <label class="form-check-label" for="bestseller-{{ $product->id }}">Best Seller</label>
+                              </div>
+                            </form>
+                          </td>
+                    
+                          
+                          <td>
+                            <form action="{{ route('product.toggle-status', ['id' => $product->id, 'type' => 'new']) }}" method="POST">
+                              @csrf
+                              <div class="form-check form-switch">
+                                  <input class="form-check-input" type="checkbox" name="is_new" id="new-{{ $product->id }}" 
+                                      {{ $product->is_new === 'true' ? 'checked' : '' }}
+                                      onchange="this.form.submit()">
+                                  <label class="form-check-label" for="new-{{ $product->id }}">New</label>
+                              </div>
+                            </form>
+                          </td>
+
 
                           <td> 
 
-                            
-                         
-
-                          
                           <a href="{{ route('products.edit', $product->id) }}"  title="Edit">
                           <button type="button" class="btn btn-info">
                             <i class="bi bi-pencil"></i>
@@ -181,5 +212,27 @@
         };
     }
 </script>
+
+
+
+<script>
+  function toggleProductStatus(productId, type) {
+      fetch(`/product/toggle-status/${productId}/${type}`, {
+          method: 'POST',
+          headers: {
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              console.log(data.message);
+          } else {
+              console.error(data.message);
+          }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+  </script>
 
 @endsection

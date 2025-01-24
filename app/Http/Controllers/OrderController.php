@@ -129,8 +129,10 @@ class OrderController extends Controller
     
             
             Cookie::queue(Cookie::forget('cart'));
+
+            $userName = auth()->user()->Fname. ' ' . auth()->user()->Lname;
     
-            return redirect()->route('home')->with('success', 'Your order has been placed successfully.');
+            return redirect()->route('home')->with('success', "$userName, thank you so much for your order! 🛍️ We truly appreciate your trust in us. Your items will be on their way soon, and we hope they bring a smile to your day! 😊");
     
         } catch (\Exception $e) {
            

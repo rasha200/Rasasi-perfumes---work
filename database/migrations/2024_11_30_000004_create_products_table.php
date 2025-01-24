@@ -20,7 +20,9 @@ return new class extends Migration
             $table->float('price');
             $table->integer('discount')->nullable();
             $table->unsignedInteger('quantity');
-            
+            $table->enum('is_bestseller', ['true', 'false'])->default('false');
+            $table->enum('is_new', ['true', 'false'])->default('false');
+
             $table->unsignedBigInteger('subCategory_id');
             $table->foreign('subCategory_id')->references('id')->on('sub_categories')->onDelete('cascade');
             

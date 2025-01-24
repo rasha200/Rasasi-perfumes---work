@@ -41,13 +41,17 @@
                         </h5>
                         <div class="group-info">
                             <div class="stars-rating">
-                                <div class="star-rating">
-                                    <span class="star-3"></span>
-                                </div>
-                                <div class="count-star">
-                                    (3)
-                                </div>
+                                <span style="color:#f9ba48;"> 
+                                    @for ($i = 1; $i <= 5; $i++)
+                                    <i class="zmdi {{ $i <= $product->average_rating ? 'zmdi-star' : 'zmdi-star-outline' }}" style="display: inline-block; vertical-align: middle;"></i>
+                                   @endfor
+                                </span>
                             </div>
+                            
+                            
+
+                            
+                            
                             <div class="price">
                                 <del>
                                     {{ $product->price }} JOD

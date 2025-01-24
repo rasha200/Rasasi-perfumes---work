@@ -14,6 +14,15 @@
 <!-- include side bar end -->
 
 
+<!-- Loading spinner -->
+<div id="pageLoader" style="position: fixed; top: 50%; left: 55%; transform: translate(-50%, -50%); z-index: 9999; display: none;">
+    <div class="spinner-border text-danger" style="width: 50px; height: 50px;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+
+
 @yield("content")
 
 
