@@ -70,6 +70,7 @@ class ProductController extends Controller
             'quantity'=>$request->input('quantity'),
             'is_bestseller' => 'false',
             'is_new' => 'false',
+            'top_product' => 0,
             'subCategory_id'=>$request->input('subCategory_id'),
         ]);
 
@@ -227,6 +228,11 @@ class ProductController extends Controller
             $product->is_bestseller = $product->is_bestseller === 'true' ? 'false' : 'true';
         } elseif ($type === 'new') {
             $product->is_new = $product->is_new === 'true' ? 'false' : 'true';
+        }elseif ($type === 'top_product') {
+            
+            Product::where('top_product', 1)->update(['top_product' => 0]);
+    
+            $product->top_product = 1;
         } else {
             return redirect()->back()->with('error', 'Invalid toggle type.');
         }

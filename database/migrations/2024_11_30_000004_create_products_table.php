@@ -22,7 +22,8 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
             $table->enum('is_bestseller', ['true', 'false'])->default('false');
             $table->enum('is_new', ['true', 'false'])->default('false');
-
+            $table->boolean('top_product')->default(0);
+            
             $table->unsignedBigInteger('subCategory_id');
             $table->foreign('subCategory_id')->references('id')->on('sub_categories')->onDelete('cascade');
             

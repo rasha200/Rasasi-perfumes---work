@@ -60,6 +60,7 @@
                           <th>Quantity</th>
                           <th>Is bestseller</th>
                           <th>Is new</th>
+                          <th>Top product</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -129,6 +130,19 @@
                               </div>
                             </form>
                           </td>
+
+
+                          <td>
+                            <form action="{{ route('product.toggle-status', ['id' => $product->id, 'type' => 'top_product']) }}" method="POST">
+                                @csrf
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="top_product" id="top_product-{{ $product->id }}" 
+                                        {{ $product->top_product ? 'checked' : '' }}
+                                        onchange="this.form.submit()">
+                                    <label class="form-check-label" for="top_product-{{ $product->id }}">Top product</label>
+                                </div>
+                            </form>
+                        </td>
 
 
                           <td> 

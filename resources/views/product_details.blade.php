@@ -200,7 +200,7 @@
                             </li>
 
                             <li class="">
-                                <a data-toggle="tab" aria-expanded="true" href="#reviews">Reviews</a>
+                                <a data-toggle="tab" aria-expanded="true" href="#reviews">Rating</a>
                             </li>
 
                         </ul>

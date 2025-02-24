@@ -10,7 +10,7 @@
     
     @foreach($discountedSubCategories as $subcategory)
         <div class="slider-item style7">
-            <div class="slider-inner equal-element" style="background-image: url({{ asset('uploads/subcategory/' . $subcategory->image) }});   ">
+            <div class="slider-inner equal-element" style="background-image: url({{ asset('uploads/subcategory/' . $subcategory->image) }});  background-repeat: no-repeat; ">
                 <div class="slider-infor" style="height:625px !important;">
                     @if($subcategory->discount > 0)
                     <h5 class="title-small">
@@ -42,9 +42,9 @@
                     <div class="item-banner style7">
                         <div class="inner">
                             @foreach($categories->slice(0, 1) as $category)
-                            <div class="banner-content" style="background-image: url({{ asset('uploads/category/' . $category->image) }}) !important">
+                            <div class="banner-content" style="background-image: url({{ asset('uploads/category/' . $category->image) }}) !important; background-repeat: no-repeat;">
                                 <h3 class="title">Pick Your <br/>Items</h3>
-                                <div class="description">
+                                <div class="description" style="color:black;">
                                     Discover the special collection of {{ $category->name }}
                                 </div>
                                 <a href="{{ route('products.byCategory', $category->id) }}" class="button btn-lets-do-it">Shop now</a>
@@ -59,20 +59,29 @@
                 <div class="banner">
                     <div class="item-banner style8">
                         <div class="inner">
-                            @foreach ($products->slice(25, 1) as $product)
-                            <div class="banner-content" style="background-image: url('{{ asset($product->product_images[0]->image) }}') !important;">                               
-                                 <h3 class="title">Our top<br/>Product,</h3>
-                                <div class="description">
+                            @if ($topProduct)
+                            <div class="banner-content" style="
+                              background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), 
+                              url('{{ asset($topProduct->product_images[0]->image) }}'); 
+                              background-size: 375px 306px !important; 
+                              background-position: center center; 
+                              background-repeat: no-repeat;
+                              height: 306px;">
+
+                                <h3 class="title">Our top<br/>Product,</h3>
+                                <div class="description" style="color:black;">
                                     built for quality and reliability
                                     
                                 </div>
-                                @if($product->discount)
-                                <a href="{{ route('product_details', $product->id) }}"> <span class="price">{{ number_format($product->price * (1 - $product->discount / 100), 2) }} JOD</span> </a>
-                                @else
-                                <a href="{{ route('product_details', $product->id) }}"> <span class="price">{{ $product->price }} JOD</span> </a>
-                                @endif
+                               
+
+                                <a href="{{ route('product_details', $topProduct->id) }}"> <span class="price"> {{ $topProduct->name }}</span> </a>
+                              
+
+                                <a href="{{ route('product_details', $topProduct->id) }}" class="button btn-lets-do-it">Shop now</a>
+
                             </div>
-                            @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -113,4 +122,9 @@
     padding: 0; /* Remove padding if any */
     margin: 0; /* Remove margin if any */
 }
+
+
+
+
+
 </style>

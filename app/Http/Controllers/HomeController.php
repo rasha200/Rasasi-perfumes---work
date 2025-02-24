@@ -54,7 +54,7 @@ class HomeController extends Controller
     // <!--==========================================  (Hero section)  ==============================-->
        $products = Product::with('product_images')->get();
 
-
+       $topProduct = Product::where('top_product', 1)->first();
 
     // <!--==========================================  (First section)  ==============================-->
        $discountedProducts = Product::where('discount', '>', 0)
@@ -147,20 +147,14 @@ class HomeController extends Controller
 
        $latestProduct = $managerNewProducts->merge($systemNewProducts);
 
-    //    $topseller = Product::select('products.*', DB::raw('SUM(order_details.quantity) as total_sold'))
-    //    ->join('order_details', 'products.id', '=', 'order_details.product_id')
-    //    ->groupBy('products.id', 'products.name', 'products.price', 'products.old_price', 'products.small_description', 'products.description', 'products.subCategory_id', 'products.quantity', 'products.discount', 'products.created_at', 'products.updated_at', 'products.deleted_at') // Include all product fields
-    //    ->orderBy('total_sold', 'desc')
-    //    ->with('product_images') 
-    //    ->take(1) 
-    //    ->get();
+
 
 
 
         return view('landing_page', [
             'discountedSubCategories'=>$discountedSubCategories,
             'categories'=>$categories ,
-            // 'topseller'=>$topseller,
+            'topProduct'=>$topProduct,
             'products'=>$products ,
             'discountedProducts'=>$discountedProducts,
             'bestseller'=>$bestseller ,
